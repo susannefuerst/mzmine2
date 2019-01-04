@@ -1,6 +1,7 @@
 package net.sf.mzmine.modules.isotopeincorporation.simulation.data;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -11,6 +12,14 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
+import com.google.common.collect.Range;
+
+import net.sf.mzmine.datamodel.DataPoint;
+import net.sf.mzmine.datamodel.MassSpectrumType;
+import net.sf.mzmine.datamodel.PolarityType;
+import net.sf.mzmine.datamodel.RawDataFile;
+import net.sf.mzmine.datamodel.impl.SimpleDataPoint;
+import net.sf.mzmine.datamodel.impl.SimpleScan;
 import net.sf.mzmine.modules.isotopeincorporation.simulation.data.constants.ErrorMessage;
 import net.sf.mzmine.modules.isotopeincorporation.simulation.data.constants.FrequencyType;
 import net.sf.mzmine.modules.isotopeincorporation.simulation.data.constants.Isotope;
@@ -18,6 +27,7 @@ import net.sf.mzmine.modules.isotopeincorporation.simulation.data.constants.Natu
 import net.sf.mzmine.modules.isotopeincorporation.simulation.data.exception.FrequencyTypeMismatchException;
 import net.sf.mzmine.modules.isotopeincorporation.simulation.util.MathUtils;
 import net.sf.mzmine.modules.isotopeincorporation.simulation.util.ParserUtils;
+import net.sf.mzmine.project.impl.RawDataFileImpl;
 /**
  * A map, used to identify a mass (the map key) to its frequency (the map value)
  * 
@@ -423,5 +433,34 @@ public class MassSpectrum extends LinkedHashMap<Double,Double> {
 		List<Entry<Double, Double>> entryList = new ArrayList<>(this.entrySet());
 		entryList.sort(Entry.comparingByValue());
 		return entryList.get(entryList.size() - 1).getKey();
+	}
+
+	public RawDataFile toRawDataFile() throws IOException {
+		RawDataFileImpl rawDataFile = new RawDataFileImpl("fileFromSimulatedSpectrum");
+		int scanNumber = 1;
+		int msLevel = 1;
+		int fragmentScans[] = { 1 };
+		DataPoint[] dataPoints = new SimpleDataPoint[this.size()];
+		int entryCount = 0;
+		for (Entry<Double, Double> entry : this.entrySet()) {
+			DataPoint datapoint = new SimpleDataPoint(entry.getKey(), entry.getValue());
+			dataPoints[entryCount] = datapoint;
+			entryCount++;
+		}
+		double precursorMZ = 0.0;
+		int precursorCharge = 0;
+		double retentionTime = 0.0;
+		Range<Double> mzRange = Range.closed(60.0, 600.0);
+		Double mostAbundantMass = this.getMostAbundandMass();
+		DataPoint basePeak = new SimpleDataPoint(mostAbundantMass, this.get(mostAbundantMass));
+		double totalIonCurrent = 100.0;
+		MassSpectrumType spectrumType = MassSpectrumType.CENTROIDED;
+		PolarityType polarity = PolarityType.NEGATIVE;
+		String scanDefinition = "SimulatedScan";
+		Range<Double> scanMZRange = Range.closed(this.getLowestMass(), this.getHighestMass());
+		SimpleScan scan = new SimpleScan(rawDataFile, scanNumber, msLevel, retentionTime, precursorMZ, precursorCharge,
+				fragmentScans, dataPoints, spectrumType, polarity, scanDefinition, scanMZRange);
+		rawDataFile.addScan(scan);
+		return rawDataFile;
 	}
 }
