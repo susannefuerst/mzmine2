@@ -27,6 +27,7 @@ public class IsotopePatternSimulatorRequest {
 	private FragmentList fragments;
 	private Boolean analyzeMassShifts = false;
 	private FrequencyType targetFrequencyType = FrequencyType.RELATIVE;
+	private int charge = 1;
 	
 	/**
 	 * Creates a general {@link IsotopePatternSimulatorRequest} using the following
@@ -38,6 +39,7 @@ public class IsotopePatternSimulatorRequest {
 	 * mass frequency precision: 4 <br>
 	 * analyze mass shifts: false <br>
 	 * frequency type: RELATIVE <br>
+	 * charge = 1 <br>
 	 */
 	public IsotopePatternSimulatorRequest()  {
 		
@@ -160,5 +162,19 @@ public class IsotopePatternSimulatorRequest {
 	public void setTargetFrequencyType(FrequencyType targetFrequencyType) {
 		this.targetFrequencyType = targetFrequencyType;
 	}
+
+    /**
+     * @return the charge
+     */
+    public int getCharge() {
+        return charge;
+    }
+
+    /**
+     * @param charge the charge to set
+     */
+    public void setCharge(int charge) {
+        this.charge = charge;
+    }
 
 }

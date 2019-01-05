@@ -23,12 +23,13 @@ public class IsotopePatternSimulator {
 		final double experimentalFragments = request.getTotalNumberOfFragments() * incRate;
 		final boolean analyzeMassShifts = request.getAnalyzeMassShifts();
 		final FrequencyType frequencyType = request.getTargetFrequencyType();
+		final int charge = request.getCharge();
 		MSDatabaseList msDatabaseList = new MSDatabaseList();
 		for (Fragment fragment : request.getFragments()) {
 			IsotopeSet naturalSet = new IsotopeSet(fragment, naturalFragments, IncorporationType.NATURAL);
 			IsotopeSet markedSet = new IsotopeSet(fragment, experimentalFragments, IncorporationType.EXPERIMENTAL);
-			MassSpectrum naturalSpectrum = naturalSet.simulateSpectrum(1);
-			MassSpectrum markedSpectrum = markedSet.simulateSpectrum(1);
+			MassSpectrum naturalSpectrum = naturalSet.simulateSpectrum(charge);
+			MassSpectrum markedSpectrum = markedSet.simulateSpectrum(charge);
 			MassSpectrum mixedSpectrum = naturalSpectrum.merge(markedSpectrum);
 			Integer roundMassesPrecision = request.getRoundedMassPrecision();
 			Integer roundFrequenciesPrecision = request.getRoundedFrequenciesPrecision();
