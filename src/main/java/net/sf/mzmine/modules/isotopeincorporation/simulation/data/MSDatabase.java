@@ -13,6 +13,7 @@ import org.jfree.chart.JFreeChart;
 
 import net.sf.mzmine.modules.isotopeincorporation.simulation.data.constants.FragmentKey;
 import net.sf.mzmine.modules.isotopeincorporation.simulation.data.constants.FrequencyType;
+import net.sf.mzmine.modules.isotopeincorporation.simulation.data.constants.IncorporationType;
 import net.sf.mzmine.modules.isotopeincorporation.simulation.data.constants.MSBarChartType;
 import net.sf.mzmine.modules.isotopeincorporation.simulation.data.constants.MSDatabaseColKey;
 import net.sf.mzmine.modules.isotopeincorporation.simulation.util.FileWriterUtils;
@@ -213,6 +214,19 @@ public class MSDatabase {
 		dataTable.addConstantValueColumn(getIncorporatedTracers());
 		dataTable.addConstantValueColumn(getFragmentFormula());
 		return dataTable.toString(NA_VALUE, true);
+	}
+	
+	public MassSpectrum getSpectrum(IncorporationType type) {
+	    if (IncorporationType.NATURAL.equals(type)) {
+	        return getNaturalSpectrum();
+	    }
+	    if (IncorporationType.MIXED.equals(type)) {
+                return getMixedSpectrum();
+            }
+	    if (IncorporationType.MARKED.equals(type)) {
+                return getMarkedSpectrum();
+            }
+	    return null;
 	}
 
 }
