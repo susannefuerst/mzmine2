@@ -25,11 +25,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.text.NumberFormat;
+
 import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
 import javax.swing.filechooser.FileNameExtensionFilter;
+
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
@@ -42,17 +44,20 @@ import org.jfree.chart.title.LegendTitle;
 import org.jfree.chart.title.TextTitle;
 import org.jfree.chart.ui.RectangleInsets;
 import org.jfree.data.xy.XYDataset;
+
 import net.sf.mzmine.chartbasics.gui.swing.EChartPanel;
 import net.sf.mzmine.chartbasics.listener.ZoomHistory;
 import net.sf.mzmine.datamodel.MassSpectrumType;
 import net.sf.mzmine.datamodel.Scan;
 import net.sf.mzmine.main.MZmineCore;
+import net.sf.mzmine.modules.isotopeincorporation.impl.SimulatedSpectrumDataset;
 import net.sf.mzmine.modules.visualization.spectra.datasets.IsotopesDataSet;
 import net.sf.mzmine.modules.visualization.spectra.datasets.PeakListDataSet;
 import net.sf.mzmine.modules.visualization.spectra.datasets.ScanDataSet;
 import net.sf.mzmine.modules.visualization.spectra.renderers.ContinuousRenderer;
 import net.sf.mzmine.modules.visualization.spectra.renderers.PeakRenderer;
 import net.sf.mzmine.modules.visualization.spectra.renderers.SpectraItemLabelGenerator;
+import net.sf.mzmine.modules.visualization.spectra.renderers.SpectraToolTipGenerator;
 import net.sf.mzmine.modules.visualization.spectra.spectraidentification.SpectraDatabaseSearchLabelGenerator;
 import net.sf.mzmine.util.GUIUtils;
 import net.sf.mzmine.util.SaveImage;
@@ -399,6 +404,14 @@ public class SpectraPlot extends EChartPanel {
       newRenderer.setDefaultItemLabelsVisible(itemLabelsVisible);
       newRenderer.setDefaultItemLabelPaint(labelsColor);
 
+    } else if(dataSet instanceof SimulatedSpectrumDataset) {
+        newRenderer = new PeakRenderer(color, transparency);
+        // Add label generator for the dataset
+        SpectraItemLabelGenerator labelGenerator = new SpectraItemLabelGenerator(this);
+        newRenderer.setDefaultItemLabelGenerator(labelGenerator);
+        newRenderer.setDefaultItemLabelsVisible(itemLabelsVisible);
+        newRenderer.setDefaultItemLabelPaint(labelsColor);
+        newRenderer.setDefaultToolTipGenerator(new SpectraToolTipGenerator());
     } else {
       newRenderer = new PeakRenderer(color, transparency);
     }
