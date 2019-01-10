@@ -7,6 +7,7 @@ import net.sf.mzmine.modules.isotopeincorporation.simulation.data.IncorporationR
 import net.sf.mzmine.modules.isotopeincorporation.simulation.data.MSDatabase;
 import net.sf.mzmine.modules.isotopeincorporation.simulation.data.MyLogger;
 import net.sf.mzmine.modules.isotopeincorporation.simulation.data.constants.FragmentKey;
+import net.sf.mzmine.modules.isotopeincorporation.simulation.data.constants.FrequencyType;
 import net.sf.mzmine.modules.isotopeincorporation.simulation.data.constants.MSBarChartType;
 import net.sf.mzmine.modules.isotopeincorporation.simulation.data.exception.FragmentNotFoundException;
 import net.sf.mzmine.modules.isotopeincorporation.simulation.data.exception.FrequencyTypeMismatchException;
@@ -21,16 +22,17 @@ public static final MyLogger LOGGER = MyLogger.getLogger(MSBarChartApplicationWi
 	
 	public static void main(String[] args) throws FrequencyTypeMismatchException, FragmentNotFoundException {
 		IsotopePatternSimulatorRequest simulatorRequest = new IsotopePatternSimulatorRequest();
-		Fragment fragment1 = FragmentsDatabase.getFragment(FragmentKey.ALA_116);
-		Fragment fragment2 = FragmentsDatabase.getFragment(FragmentKey.ALA_116);
-		fragment2.changeCapacity("C2");
-		Fragment fragment3 = FragmentsDatabase.getFragment(FragmentKey.ALA_116);
+		Fragment fragment1 = FragmentsDatabase.getFragment(FragmentKey.GLN_156);
+		Fragment fragment2 = FragmentsDatabase.getFragment(FragmentKey.GLN_156);
+		fragment2.changeCapacity("C4");
+		Fragment fragment3 = FragmentsDatabase.getFragment(FragmentKey.GLN_156);
 		fragment3.changeCapacity("N");
 		simulatorRequest.setFragments(new FragmentList(fragment1, fragment2, fragment3));
 		simulatorRequest.setIncorporationRate(new IncorporationRate(0.6));
-		simulatorRequest.setMinimalRelativeFrequency(0.001);
+		simulatorRequest.setMinimalRelativeFrequency(0.1);
 		simulatorRequest.setAnalyzeMassShifts(true);
 		simulatorRequest.setTotalNumberOfFragments(10000.0);
+		simulatorRequest.setTargetFrequencyType(FrequencyType.RELATIVE);
 		IsotopePatternSimulatorResponse response = IsotopePatternSimulator.simulate(simulatorRequest);
 		for (MSDatabase msDatabase : response.getMsDatabaseList()) {
 			LOGGER.info(msDatabase);
