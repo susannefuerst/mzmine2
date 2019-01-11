@@ -11,16 +11,17 @@ import net.sf.mzmine.modules.isotopeincorporation.simulation.simulation.IsotopeP
 import net.sf.mzmine.modules.isotopeincorporation.simulation.simulation.IsotopePatternSimulatorRequest;
 
 public class IsotopePatternSimulationDemo {
-	
-	public static void main(String[] args) throws FragmentNotFoundException, FrequencyTypeMismatchException {
-		IsotopePatternSimulatorRequest simulatorRequest = new IsotopePatternSimulatorRequest();
-		Fragment fragment = FragmentsDatabase.getFragment(FragmentKey.ASP_130);
-		fragment.changeCapacity("N");
-//		Fragment fragment = new Fragment(FragmentKey.UNKNOWN, "N10", "N");
-		simulatorRequest.setFragments(new FragmentList(fragment));
-		simulatorRequest.setIncorporationRate(new IncorporationRate(0.6));
-		simulatorRequest.setMinimalRelativeFrequency(0.002);
-		simulatorRequest.setAnalyzeMassShifts(true);
-		IsotopePatternSimulator.simulate(simulatorRequest);
-	}
+
+    public static void main(String[] args)
+            throws FragmentNotFoundException, FrequencyTypeMismatchException {
+        IsotopePatternSimulatorRequest simulatorRequest = new IsotopePatternSimulatorRequest();
+        Fragment fragment = FragmentsDatabase.getFragment(FragmentKey.ASP_130);
+        fragment.changeCapacity("N");
+        // Fragment fragment = new Fragment(FragmentKey.UNKNOWN, "N10", "N");
+        simulatorRequest.setFragments(new FragmentList(fragment));
+        simulatorRequest.setIncorporationRate(new IncorporationRate(0.6));
+        simulatorRequest.setMinimalFrequency(0.002);
+        simulatorRequest.setAnalyzeMassShifts(true);
+        IsotopePatternSimulator.simulate(simulatorRequest);
+    }
 }

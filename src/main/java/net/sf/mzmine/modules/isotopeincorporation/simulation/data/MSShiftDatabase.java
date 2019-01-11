@@ -11,6 +11,8 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
+import net.sf.mzmine.modules.isotopeincorporation.impl.LabeledSimpleDataPoint;
+import net.sf.mzmine.modules.isotopeincorporation.impl.SimulatedSpectrumDataset;
 import net.sf.mzmine.modules.isotopeincorporation.simulation.data.constants.FragmentKey;
 import net.sf.mzmine.modules.isotopeincorporation.simulation.data.constants.FrequencyType;
 import net.sf.mzmine.modules.isotopeincorporation.simulation.data.constants.IncorporationType;
@@ -40,19 +42,7 @@ public class MSShiftDatabase extends MSDatabase {
     }
 
     /**
-     * creates a MSShiftDatabase from a csv file given by the absolute path. The
-     * file should represent a table as follows:
-     * 
-     * IncRate | NaturalMass | NaturalFrequency | NaturalShiftValues |
-     * NaturalShiftIsotopes | MarkedMass | MarkedFrequency | MarkedShiftValues |
-     * MarkedShiftIsotopes | MixedMass | MixedFrequency | MixedShiftValues |
-     * MixedShiftIsotopes | FragmentKey | IncorporatedTracers | FragmentFormula
-     * |
-     * ________|_____________|__________________|____________________|______________________|____________|_________________|___________________|_____________________|___________|________________|__________________|____________________|_______________|_____________________|_________________|_
-     * 0.8 | 43.9898 | 0.9876 | 0.0[0-0] | NONE | 44.9932 | 0.9966 | 0.0[0-0] |
-     * NONE | 43.9898 | 0.1975 | 0.0[0-0] | NONE | UNKNOWN | C | CO2 | 0.8 |
-     * 44.9932 | 0.0089 | 1.0034[0-1] | C_13 | NA | NA | NA | NA | 44.9932 |
-     * 0.799 | 1.0034[0-1] | C_13 | UNKNOWN | C | CO2 |
+     * creates a MSShiftDatabase from a csv file given by the absolute path.
      * 
      * @param absoluteFilePath
      */
@@ -62,18 +52,7 @@ public class MSShiftDatabase extends MSDatabase {
 
     /**
      * parse this object from a csv file with information according to the
-     * MSShiftDatabaseColKey enum. The file should represent a table as follows:
-     * <br>
-     * |IncRate | NaturalMass | NaturalFrequency | NaturalShiftValues |
-     * NaturalShiftIsotopes | MarkedMass | MarkedFrequency | MarkedShiftValues |
-     * MarkedShiftIsotopes | MixedMass | MixedFrequency | MixedShiftValues |
-     * MixedShiftIsotopes | FragmentKey | IncorporatedTracers | FragmentFormula
-     * |
-     * |________|_____________|__________________|____________________|______________________|____________|_________________|___________________|_____________________|___________|________________|__________________|____________________|_______________|_____________________|_________________|
-     * | 0.8 | 43.9898 | 0.9876 | 0.0[0-0] | NONE | 44.9932 | 0.9966 | 0.0[0-0]
-     * | NONE | 43.9898 | 0.1975 | 0.0[0-0] | NONE | UNKNOWN | C | CO2 | | 0.8 |
-     * 44.9932 | 0.0089 | 1.0034[0-1] | C_13 | NA | NA | NA | NA | 44.9932 |
-     * 0.799 | 1.0034[0-1] | C_13 | UNKNOWN | C | CO2 |
+     * MSShiftDatabaseColKey enum.
      * 
      * @param absoluteFilePath
      */
@@ -126,19 +105,7 @@ public class MSShiftDatabase extends MSDatabase {
 
     /**
      * write this object to csv using the headers defined in
-     * MSShiftDatabaseColKey enum. The csv will represent a table as follows:
-     * 
-     * IncRate | NaturalMass | NaturalFrequency | NaturalShiftValues |
-     * NaturalShiftIsotopes | MarkedMass | MarkedFrequency | MarkedShiftValues |
-     * MarkedShiftIsotopes | MixedMass | MixedFrequency | MixedShiftValues |
-     * MixedShiftIsotopes | FragmentKey | IncorporatedTracers | FragmentFormula
-     * |
-     * ________|_____________|__________________|____________________|______________________|____________|_________________|___________________|_____________________|___________|________________|__________________|____________________|_______________|_____________________|_________________|_
-     * 0.8 | 43.9898 | 0.9876 | 0.0[0-0] | NONE | 44.9932 | 0.9966 | 0.0[0-0] |
-     * NONE | 43.9898 | 0.1975 | 0.0[0-0] | NONE | UNKNOWN | C | CO2 | 0.8 |
-     * 44.9932 | 0.0089 | 1.0034[0-1] | C_13 | NA | NA | NA | NA | 44.9932 |
-     * 0.799 | 1.0034[0-1] | C_13 | UNKNOWN | C | CO2 |
-     * 
+     * MSShiftDatabaseColKey enum.
      * 
      * @param outputFolderPath
      * @throws IOException
@@ -166,19 +133,7 @@ public class MSShiftDatabase extends MSDatabase {
     }
 
     /**
-     * Returns a table string representation of this object as follows:
-     *
-     * IncRate | NaturalMass | NaturalFrequency | NaturalShiftValues |
-     * NaturalShiftIsotopes | MarkedMass | MarkedFrequency | MarkedShiftValues |
-     * MarkedShiftIsotopes | MixedMass | MixedFrequency | MixedShiftValues |
-     * MixedShiftIsotopes | FragmentKey | IncorporatedTracers | FragmentFormula
-     * |
-     * ________|_____________|__________________|____________________|______________________|____________|_________________|___________________|_____________________|___________|________________|__________________|____________________|_______________|_____________________|_________________|_
-     * 0.8 | 43.9898 | 0.9876 | 0.0[0-0] | NONE | 44.9932 | 0.9966 | 0.0[0-0] |
-     * NONE | 43.9898 | 0.1975 | 0.0[0-0] | NONE | UNKNOWN | C | CO2 | 0.8 |
-     * 44.9932 | 0.0089 | 1.0034[0-1] | C_13 | NA | NA | NA | NA | 44.9932 |
-     * 0.799 | 1.0034[0-1] | C_13 | UNKNOWN | C | CO2 |
-     * 
+     * Returns a table string representation of this object
      */
     @Override
     public String toString() {
@@ -362,5 +317,25 @@ public class MSShiftDatabase extends MSDatabase {
 
     public boolean includesMixedSpectrum() {
         return !getMixedSpectrum().entrySet().isEmpty();
+    }
+
+    public SimulatedSpectrumDataset toSimulatedSpectrumDataSet(
+            IncorporationType incType) {
+        MassSpectrum spectrum = this.getSpectrum(incType);
+        LabeledSimpleDataPoint[] dataPoints = new LabeledSimpleDataPoint[spectrum
+                .size()];
+        int entryCount = 0;
+        for (Entry<Double, Double> entry : spectrum.entrySet()) {
+            String isotopesString = "Heavy isotopes: "
+                    + this.shiftInducingIsotopes(incType, entry.getKey());
+            LabeledSimpleDataPoint datapoint = new LabeledSimpleDataPoint(
+                    entry.getKey(), entry.getValue(), isotopesString);
+            dataPoints[entryCount] = datapoint;
+            entryCount++;
+        }
+        String label = "Simulation of " + getIncorporatedTracers()
+                + " incorporation in " + getFragmentKey().name() + ", "
+                + getFragmentFormula();
+        return new SimulatedSpectrumDataset(dataPoints, label);
     }
 }

@@ -13,19 +13,26 @@ import net.sf.mzmine.modules.isotopeincorporation.simulation.simulation.IsotopeP
 import net.sf.mzmine.modules.isotopeincorporation.simulation.simulation.IsotopePatternSimulatorResponse;
 
 public class MassSpectraToCsvAndJpeg {
-	
-	public static void main(String[] args) throws FrequencyTypeMismatchException, IOException {
-		IsotopePatternSimulatorRequest simulatorRequest = new IsotopePatternSimulatorRequest();
-		simulatorRequest.setFragments(FragmentsDatabase.getAllFregments());
-		simulatorRequest.setIncorporationRate(new IncorporationRate(0.6));
-		simulatorRequest.setMinimalRelativeFrequency(0.002);
-		simulatorRequest.setAnalyzeMassShifts(true);
-		IsotopePatternSimulatorResponse response = IsotopePatternSimulator.simulate(simulatorRequest);
-		for (MSDatabase msDatabase : response.getMsDatabaseList()) {
-			String metaboliteAbbreviation = msDatabase.getFragmentKey().getMetaboliteKey().getAbbreviation();
-			msDatabase.writeCsv(PathConstants.FILE_OUTPUT_FOLDER.toAbsolutePath(metaboliteAbbreviation + "\\"));
-			msDatabase.saveMSCategoryBarChartAsJPEG(PathConstants.FILE_OUTPUT_FOLDER.toAbsolutePath(metaboliteAbbreviation + "\\"), MSBarChartType.ALL_SPECTRA);
-		}
-	}
+
+    public static void main(String[] args)
+            throws FrequencyTypeMismatchException, IOException {
+        IsotopePatternSimulatorRequest simulatorRequest = new IsotopePatternSimulatorRequest();
+        simulatorRequest.setFragments(FragmentsDatabase.getAllFregments());
+        simulatorRequest.setIncorporationRate(new IncorporationRate(0.6));
+        simulatorRequest.setMinimalFrequency(0.002);
+        simulatorRequest.setAnalyzeMassShifts(true);
+        IsotopePatternSimulatorResponse response = IsotopePatternSimulator
+                .simulate(simulatorRequest);
+        for (MSDatabase msDatabase : response.getMsDatabaseList()) {
+            String metaboliteAbbreviation = msDatabase.getFragmentKey()
+                    .getMetaboliteKey().getAbbreviation();
+            msDatabase.writeCsv(PathConstants.FILE_OUTPUT_FOLDER
+                    .toAbsolutePath(metaboliteAbbreviation + "\\"));
+            msDatabase.saveMSCategoryBarChartAsJPEG(
+                    PathConstants.FILE_OUTPUT_FOLDER
+                            .toAbsolutePath(metaboliteAbbreviation + "\\"),
+                    MSBarChartType.ALL_SPECTRA);
+        }
+    }
 
 }

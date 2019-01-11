@@ -12,16 +12,20 @@ import net.sf.mzmine.modules.isotopeincorporation.simulation.simulation.IsotopeP
 import net.sf.mzmine.modules.isotopeincorporation.simulation.simulation.IsotopePatternSimulatorResponse;
 
 public class SaveMassSpectraToCsvDemo {
-	public static void main(String[] args) throws FrequencyTypeMismatchException, IOException {
-		IsotopePatternSimulatorRequest simulatorRequest = new IsotopePatternSimulatorRequest();
-		simulatorRequest.setFragments(FragmentsDatabase.getAllFregments());
-		simulatorRequest.setIncorporationRate(new IncorporationRate(0.6));
-		simulatorRequest.setMinimalRelativeFrequency(0.002);
-		simulatorRequest.setAnalyzeMassShifts(true);
-		IsotopePatternSimulatorResponse response = IsotopePatternSimulator.simulate(simulatorRequest);
-		for (MSDatabase msDatabase : response.getMsDatabaseList()) {
-			msDatabase.writeCsv(PathConstants.FILE_OUTPUT_FOLDER.toAbsolutePath(msDatabase.getFragmentKey().getMetaboliteKey().getAbbreviation() + "\\"));
-		}
-	}
+    public static void main(String[] args)
+            throws FrequencyTypeMismatchException, IOException {
+        IsotopePatternSimulatorRequest simulatorRequest = new IsotopePatternSimulatorRequest();
+        simulatorRequest.setFragments(FragmentsDatabase.getAllFregments());
+        simulatorRequest.setIncorporationRate(new IncorporationRate(0.6));
+        simulatorRequest.setMinimalFrequency(0.002);
+        simulatorRequest.setAnalyzeMassShifts(true);
+        IsotopePatternSimulatorResponse response = IsotopePatternSimulator
+                .simulate(simulatorRequest);
+        for (MSDatabase msDatabase : response.getMsDatabaseList()) {
+            msDatabase.writeCsv(PathConstants.FILE_OUTPUT_FOLDER
+                    .toAbsolutePath(msDatabase.getFragmentKey()
+                            .getMetaboliteKey().getAbbreviation() + "\\"));
+        }
+    }
 
 }

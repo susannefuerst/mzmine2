@@ -18,27 +18,32 @@ import net.sf.mzmine.modules.isotopeincorporation.simulation.visualisation.MSBar
 
 public class MSBarChartApplicationWindowDemo2 {
 
-public static final MyLogger LOGGER = MyLogger.getLogger(MSBarChartApplicationWindowDemo2.class);
-	
-	public static void main(String[] args) throws FrequencyTypeMismatchException, FragmentNotFoundException {
-		IsotopePatternSimulatorRequest simulatorRequest = new IsotopePatternSimulatorRequest();
-		Fragment fragment1 = FragmentsDatabase.getFragment(FragmentKey.GLN_156);
-		Fragment fragment2 = FragmentsDatabase.getFragment(FragmentKey.GLN_156);
-		fragment2.changeCapacity("C4");
-		Fragment fragment3 = FragmentsDatabase.getFragment(FragmentKey.GLN_156);
-		fragment3.changeCapacity("N");
-		simulatorRequest.setFragments(new FragmentList(fragment1, fragment2, fragment3));
-		simulatorRequest.setIncorporationRate(new IncorporationRate(0.6));
-		simulatorRequest.setMinimalRelativeFrequency(0.1);
-		simulatorRequest.setAnalyzeMassShifts(true);
-		simulatorRequest.setTotalNumberOfFragments(10000.0);
-		simulatorRequest.setTargetFrequencyType(FrequencyType.RELATIVE);
-		IsotopePatternSimulatorResponse response = IsotopePatternSimulator.simulate(simulatorRequest);
-		for (MSDatabase msDatabase : response.getMsDatabaseList()) {
-			LOGGER.info(msDatabase);
-			MSBarChartApplicationWindow demo = new MSBarChartApplicationWindow("Bar Demo 1", msDatabase, MSBarChartType.ALL_SPECTRA);
-			demo.pack();
-			demo.setVisible(true);
-		}
-	}
+    public static final MyLogger LOGGER = MyLogger
+            .getLogger(MSBarChartApplicationWindowDemo2.class);
+
+    public static void main(String[] args)
+            throws FrequencyTypeMismatchException, FragmentNotFoundException {
+        IsotopePatternSimulatorRequest simulatorRequest = new IsotopePatternSimulatorRequest();
+        Fragment fragment1 = FragmentsDatabase.getFragment(FragmentKey.GLN_156);
+        Fragment fragment2 = FragmentsDatabase.getFragment(FragmentKey.GLN_156);
+        fragment2.changeCapacity("C4");
+        Fragment fragment3 = FragmentsDatabase.getFragment(FragmentKey.GLN_156);
+        fragment3.changeCapacity("N");
+        simulatorRequest.setFragments(
+                new FragmentList(fragment1, fragment2, fragment3));
+        simulatorRequest.setIncorporationRate(new IncorporationRate(0.6));
+        simulatorRequest.setMinimalFrequency(0.1);
+        simulatorRequest.setAnalyzeMassShifts(true);
+        simulatorRequest.setTotalNumberOfFragments(10000.0);
+        simulatorRequest.setTargetFrequencyType(FrequencyType.RELATIVE);
+        IsotopePatternSimulatorResponse response = IsotopePatternSimulator
+                .simulate(simulatorRequest);
+        for (MSDatabase msDatabase : response.getMsDatabaseList()) {
+            LOGGER.info(msDatabase);
+            MSBarChartApplicationWindow demo = new MSBarChartApplicationWindow(
+                    "Bar Demo 1", msDatabase, MSBarChartType.ALL_SPECTRA);
+            demo.pack();
+            demo.setVisible(true);
+        }
+    }
 }

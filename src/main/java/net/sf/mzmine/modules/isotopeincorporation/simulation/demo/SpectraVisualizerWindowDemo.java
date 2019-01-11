@@ -24,31 +24,37 @@ import net.sf.mzmine.project.impl.RawDataFileImpl;
 
 public class SpectraVisualizerWindowDemo {
 
-	public static void main(String[] args)
-			throws FragmentNotFoundException, FrequencyTypeMismatchException, IOException {
+    public static void main(String[] args) throws FragmentNotFoundException,
+            FrequencyTypeMismatchException, IOException {
 
-		MZmineCore.main(new String[0]);
+        MZmineCore.main(new String[0]);
 
-		IsotopePatternSimulatorRequest simulatorRequest = new IsotopePatternSimulatorRequest();
-		Fragment fragment = FragmentsDatabase.getFragment(FragmentKey.GLN_156);
-		fragment.changeCapacity("C4");
-		simulatorRequest.setFragments(new FragmentList(fragment));
-		simulatorRequest.setIncorporationRate(new IncorporationRate(0.7));
-		simulatorRequest.setMinimalRelativeFrequency(0.1);
-		simulatorRequest.setAnalyzeMassShifts(true);
-		simulatorRequest.setTotalNumberOfFragments(10000.0);
-		simulatorRequest.setRoundedMassPrecision(4);
-		simulatorRequest.setTargetFrequencyType(FrequencyType.RELATIVE);
-		IsotopePatternSimulatorResponse response = IsotopePatternSimulator.simulate(simulatorRequest);
-		MSDatabase msDatabase = response.getMsDatabaseList().get(0);
-//		RawDataFile rawDataFile = MassSpectrum.toRawDataFile(msDatabase, IncorporationType.MIXED);
-//		SpectraVisualizerWindow newWindow = new SpectraVisualizerWindow(rawDataFile);
-//		newWindow.loadRawData(rawDataFile.getScan(1));
-//		newWindow.getSpectrumPlot().getXYPlot().getRenderer().setDefaultToolTipGenerator(new SpectraToolTipGenerator());
-                SpectraVisualizerWindow newWindow = new SpectraVisualizerWindow(new RawDataFileImpl("simulatedDataFile"));
-                SimulatedSpectrumDataset dataSet = ((MSShiftDatabase) msDatabase).toSimulatedSpectrumDataSet(IncorporationType.MIXED);
-                newWindow.getSpectrumPlot().addDataSet(dataSet, Color.blue, true);
-		newWindow.setVisible(true);
-	}
+        IsotopePatternSimulatorRequest simulatorRequest = new IsotopePatternSimulatorRequest();
+        Fragment fragment = FragmentsDatabase.getFragment(FragmentKey.GLN_156);
+        fragment.changeCapacity("C4");
+        simulatorRequest.setFragments(new FragmentList(fragment));
+        simulatorRequest.setIncorporationRate(new IncorporationRate(0.7));
+        simulatorRequest.setMinimalFrequency(0.1);
+        simulatorRequest.setAnalyzeMassShifts(true);
+        simulatorRequest.setTotalNumberOfFragments(10000.0);
+        simulatorRequest.setRoundedMassPrecision(4);
+        simulatorRequest.setTargetFrequencyType(FrequencyType.RELATIVE);
+        IsotopePatternSimulatorResponse response = IsotopePatternSimulator
+                .simulate(simulatorRequest);
+        MSDatabase msDatabase = response.getMsDatabaseList().get(0);
+        // RawDataFile rawDataFile = MassSpectrum.toRawDataFile(msDatabase,
+        // IncorporationType.MIXED);
+        // SpectraVisualizerWindow newWindow = new
+        // SpectraVisualizerWindow(rawDataFile);
+        // newWindow.loadRawData(rawDataFile.getScan(1));
+        // newWindow.getSpectrumPlot().getXYPlot().getRenderer().setDefaultToolTipGenerator(new
+        // SpectraToolTipGenerator());
+        SpectraVisualizerWindow newWindow = new SpectraVisualizerWindow(
+                new RawDataFileImpl("simulatedDataFile"));
+        SimulatedSpectrumDataset dataSet = ((MSShiftDatabase) msDatabase)
+                .toSimulatedSpectrumDataSet(IncorporationType.MIXED);
+        newWindow.getSpectrumPlot().addDataSet(dataSet, Color.blue, true);
+        newWindow.setVisible(true);
+    }
 
 }
