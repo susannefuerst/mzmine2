@@ -224,6 +224,8 @@ public class SpectraPlot extends EChartPanel {
 
             GUIUtils.addMenuItem(popupMenu, "Add isotope pattern", masterPlot,
                     "ADD_ISOTOPE_PATTERN");
+            GUIUtils.addMenuItem(popupMenu, "Simulate isotope incorporation",
+                    masterPlot, "SIMULATE_ISOTOPE_INCORPORATION");
         }
 
         // reset zoom history
