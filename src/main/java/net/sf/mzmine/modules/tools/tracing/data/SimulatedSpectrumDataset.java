@@ -18,8 +18,14 @@
 
 package net.sf.mzmine.modules.tools.tracing.data;
 
+import java.util.ArrayList;
+import java.util.Map.Entry;
+
 import org.jfree.data.xy.AbstractXYDataset;
 import org.jfree.data.xy.IntervalXYDataset;
+
+import io.github.msdk.isotopes.tracing.data.IsotopePattern;
+import io.github.msdk.isotopes.tracing.data.MassSpectrum;
 
 /**
  * A dataset that includes labeled datapoints, where the label can be use for
@@ -32,17 +38,35 @@ public class SimulatedSpectrumDataset extends AbstractXYDataset
         implements IntervalXYDataset {
 
     private static final long serialVersionUID = 1L;
-    private LabeledSimpleDataPoint[] dataPoints;
+    private ArrayList<LabeledSimpleDataPoint> dataPoints;
     private String seriesKey;
 
-    public SimulatedSpectrumDataset(LabeledSimpleDataPoint[] dataPoints,
-            String seriesKey) {
+    public SimulatedSpectrumDataset(
+            ArrayList<LabeledSimpleDataPoint> dataPoints, String seriesKey) {
+        this.dataPoints = dataPoints;
+        this.seriesKey = seriesKey;
+    }
+
+    public SimulatedSpectrumDataset(MassSpectrum spectrum, String seriesKey) {
+        ArrayList<LabeledSimpleDataPoint> dataPoints = new ArrayList<>();
+        for (Entry<Double, Double> entry : spectrum.entrySet()) {
+            String label;
+            if (spectrum instanceof IsotopePattern) {
+                label = ((IsotopePattern) spectrum).getFormula(entry.getKey())
+                        .toSimpleString();
+            } else {
+                label = "";
+            }
+            LabeledSimpleDataPoint datapoint = new LabeledSimpleDataPoint(
+                    entry.getKey(), entry.getValue(), label);
+            dataPoints.add(datapoint);
+        }
         this.dataPoints = dataPoints;
         this.seriesKey = seriesKey;
     }
 
     public String getDataPointLabel(int series, int item) {
-        return ((LabeledSimpleDataPoint) dataPoints[item]).getLabel();
+        return ((LabeledSimpleDataPoint) dataPoints.get(item)).getLabel();
     }
 
     @Override
@@ -56,15 +80,15 @@ public class SimulatedSpectrumDataset extends AbstractXYDataset
     }
 
     public int getItemCount(int series) {
-        return dataPoints.length;
+        return dataPoints.size();
     }
 
     public Number getX(int series, int item) {
-        return dataPoints[item].getMZ();
+        return dataPoints.get(item).getMZ();
     }
 
     public Number getY(int series, int item) {
-        return dataPoints[item].getIntensity();
+        return dataPoints.get(item).getIntensity();
     }
 
     public Number getEndX(int series, int item) {
