@@ -20,6 +20,7 @@ package net.sf.mzmine.modules.tools.tracing.simulation.isotopeincorporation;
 
 import java.text.DecimalFormat;
 
+import net.sf.mzmine.parameters.Parameter;
 import net.sf.mzmine.parameters.impl.SimpleParameterSet;
 import net.sf.mzmine.parameters.parametertypes.BooleanParameter;
 import net.sf.mzmine.parameters.parametertypes.DoubleParameter;
@@ -60,5 +61,11 @@ public class SimulateIsotopeIncorporationParameter extends SimpleParameterSet {
     public static final OptionalParameter<IncorporationRateParameter> TRACER_BOTH_INC = new OptionalParameter<IncorporationRateParameter>(
             new IncorporationRateParameter("Incorporation rate for both tracer",
                     "Indicates the amount of molecules that has both tracer at once incorporated. Required if you used two tracer and want to simulate independent incorporation."));
+
+    public SimulateIsotopeIncorporationParameter() {
+        super(new Parameter[] { DETERMINE_ISOTOPE_COMPOSITION, CHARGE, FORMULA,
+                CAPACITY, MIN_INTENSITY, TOTAL_INCORPORATION, TRACER_1,
+                TRACER_1_INC, TRACER_2, TRACER_2_INC, TRACER_BOTH_INC });
+    }
 
 }
