@@ -100,6 +100,7 @@ import net.sf.mzmine.modules.rawdatamethods.rawdataimport.RawDataImportModule;
 import net.sf.mzmine.modules.tools.isotopepatternpreview.IsotopePatternPreviewModule;
 import net.sf.mzmine.modules.tools.mzrangecalculator.MzRangeFormulaCalculatorModule;
 import net.sf.mzmine.modules.tools.mzrangecalculator.MzRangeMassCalculatorModule;
+import net.sf.mzmine.modules.tools.tracing.simulation.isotopeincorporation.SimulateIsotopeIncorporationModule;
 import net.sf.mzmine.modules.visualization.histogram.HistogramVisualizerModule;
 import net.sf.mzmine.modules.visualization.infovisualizer.InfoVisualizerModule;
 import net.sf.mzmine.modules.visualization.intensityplot.IntensityPlotModule;
@@ -122,77 +123,96 @@ import net.sf.mzmine.modules.visualization.vankrevelendiagram.VanKrevelenDiagram
  */
 public class MZmineModulesList {
 
-  public static final Class<?> MODULES[] = new Class<?>[] {
+    public static final Class<?> MODULES[] = new Class<?>[] {
 
-      // Project methods
+            // Project methods
 
-      ProjectLoadModule.class, ProjectSaveModule.class, ProjectSaveAsModule.class,
-      ProjectCloseModule.class,
+            ProjectLoadModule.class, ProjectSaveModule.class,
+            ProjectSaveAsModule.class, ProjectCloseModule.class,
 
-      // Batch mode
-      BatchModeModule.class,
+            // Batch mode
+            BatchModeModule.class,
 
-      // Raw data methods
-      RawDataImportModule.class, RawDataExportModule.class, RawFileMergeModule.class,
-      ExtractScansModule.class, MassDetectionModule.class, ShoulderPeaksFilterModule.class,
-      ChromatogramBuilderModule.class, ADAPChromatogramBuilderModule.class,
-      // Not ready for prime time: ADAP3DModule.class,
-      GridMassModule.class, ManualPeakPickerModule.class, MsMsPeakPickerModule.class,
-      ScanFiltersModule.class, CropFilterModule.class, BaselineCorrectionModule.class,
-      AlignScansModule.class, ScanSmoothingModule.class, OrderDataFilesModule.class,
+            // Raw data methods
+            RawDataImportModule.class, RawDataExportModule.class,
+            RawFileMergeModule.class, ExtractScansModule.class,
+            MassDetectionModule.class, ShoulderPeaksFilterModule.class,
+            ChromatogramBuilderModule.class,
+            ADAPChromatogramBuilderModule.class,
+            // Not ready for prime time: ADAP3DModule.class,
+            GridMassModule.class, ManualPeakPickerModule.class,
+            MsMsPeakPickerModule.class, ScanFiltersModule.class,
+            CropFilterModule.class, BaselineCorrectionModule.class,
+            AlignScansModule.class, ScanSmoothingModule.class,
+            OrderDataFilesModule.class,
 
-      // Alignment
-      OrderPeakListsModule.class, JoinAlignerModule.class, HierarAlignerGcModule.class,
+            // Alignment
+            OrderPeakListsModule.class, JoinAlignerModule.class,
+            HierarAlignerGcModule.class,
 
-      RansacAlignerModule.class,
-      // PathAlignerModule.class,
+            RansacAlignerModule.class,
+            // PathAlignerModule.class,
 
-      // I/O
-      CSVExportModule.class, MetaboAnalystExportModule.class, MzTabExportModule.class,
-      SQLExportModule.class, XMLExportModule.class, CasmiImportModule.class,
-      MzTabImportModule.class, XMLImportModule.class, MSPExportModule.class, MGFExportModule.class,
-      GNPSExportAndSubmitModule.class, SiriusExportModule.class,
+            // I/O
+            CSVExportModule.class, MetaboAnalystExportModule.class,
+            MzTabExportModule.class, SQLExportModule.class,
+            XMLExportModule.class, CasmiImportModule.class,
+            MzTabImportModule.class, XMLImportModule.class,
+            MSPExportModule.class, MGFExportModule.class,
+            GNPSExportAndSubmitModule.class, SiriusExportModule.class,
 
-      // Gap filling
-      PeakFinderModule.class, MultiThreadPeakFinderModule.class, SameRangeGapFillerModule.class,
+            // Gap filling
+            PeakFinderModule.class, MultiThreadPeakFinderModule.class,
+            SameRangeGapFillerModule.class,
 
-      // Isotopes
-      IsotopeGrouperModule.class, IsotopePatternCalculator.class, IsotopePeakScannerModule.class,
+            // Isotopes
+            IsotopeGrouperModule.class, IsotopePatternCalculator.class,
+            IsotopePeakScannerModule.class,
 
-      // Peak detection
-      SmoothingModule.class, DeconvolutionModule.class, ShapeModelerModule.class,
-      PeakExtenderModule.class, TargetedPeakDetectionModule.class,
-      ADAP3DecompositionV1_5Module.class, ADAP3DecompositionV2Module.class,
+            // Peak detection
+            SmoothingModule.class, DeconvolutionModule.class,
+            ShapeModelerModule.class, PeakExtenderModule.class,
+            TargetedPeakDetectionModule.class,
+            ADAP3DecompositionV1_5Module.class,
+            ADAP3DecompositionV2Module.class,
 
-      // Peak list filtering
-      DuplicateFilterModule.class, RowsFilterModule.class, PeakComparisonRowFilterModule.class,
-      PeakFilterModule.class, PeaklistClearAnnotationsModule.class, NeutralLossFilterModule.class,
+            // Peak list filtering
+            DuplicateFilterModule.class, RowsFilterModule.class,
+            PeakComparisonRowFilterModule.class, PeakFilterModule.class,
+            PeaklistClearAnnotationsModule.class, NeutralLossFilterModule.class,
 
-      // Normalization
-      RTNormalizerModule.class, LinearNormalizerModule.class,
-      StandardCompoundNormalizerModule.class,
+            // Normalization
+            RTNormalizerModule.class, LinearNormalizerModule.class,
+            StandardCompoundNormalizerModule.class,
 
-      // Data analysis
-      CVPlotModule.class, LogratioPlotModule.class, PCAPlotModule.class, CDAPlotModule.class,
-      SammonsPlotModule.class, ClusteringModule.class, HeatMapModule.class,
+            // Data analysis
+            CVPlotModule.class, LogratioPlotModule.class, PCAPlotModule.class,
+            CDAPlotModule.class, SammonsPlotModule.class,
+            ClusteringModule.class, HeatMapModule.class,
 
-      // Identification
-      CustomDBSearchModule.class, FormulaPredictionModule.class, FragmentSearchModule.class,
-      AdductSearchModule.class, ComplexSearchModule.class, OnlineDBSearchModule.class,
-      LipidSearchModule.class, CameraSearchModule.class, NistMsSearchModule.class,
-      FormulaPredictionPeakListModule.class, Ms2SearchModule.class, SiriusProcessingModule.class,
+            // Identification
+            CustomDBSearchModule.class, FormulaPredictionModule.class,
+            FragmentSearchModule.class, AdductSearchModule.class,
+            ComplexSearchModule.class, OnlineDBSearchModule.class,
+            LipidSearchModule.class, CameraSearchModule.class,
+            NistMsSearchModule.class, FormulaPredictionPeakListModule.class,
+            Ms2SearchModule.class, SiriusProcessingModule.class,
 
-      // Visualizers
-      TICVisualizerModule.class, SpectraVisualizerModule.class, TwoDVisualizerModule.class,
-      ThreeDVisualizerModule.class, MsMsVisualizerModule.class, NeutralLossVisualizerModule.class,
-      MZDistributionHistoModule.class, PeakListTableModule.class, IsotopePatternExportModule.class,
-      MSMSExportModule.class, ScatterPlotVisualizerModule.class, HistogramVisualizerModule.class,
-      InfoVisualizerModule.class, IntensityPlotModule.class, KendrickMassPlotModule.class,
-      VanKrevelenDiagramModule.class,
+            // Visualizers
+            TICVisualizerModule.class, SpectraVisualizerModule.class,
+            TwoDVisualizerModule.class, ThreeDVisualizerModule.class,
+            MsMsVisualizerModule.class, NeutralLossVisualizerModule.class,
+            MZDistributionHistoModule.class, PeakListTableModule.class,
+            IsotopePatternExportModule.class, MSMSExportModule.class,
+            ScatterPlotVisualizerModule.class, HistogramVisualizerModule.class,
+            InfoVisualizerModule.class, IntensityPlotModule.class,
+            KendrickMassPlotModule.class, VanKrevelenDiagramModule.class,
 
-      // Tools
-      MzRangeMassCalculatorModule.class, MzRangeFormulaCalculatorModule.class,
-      IsotopePatternPreviewModule.class
+            // Tools
+            MzRangeMassCalculatorModule.class,
+            MzRangeFormulaCalculatorModule.class,
+            IsotopePatternPreviewModule.class,
+            SimulateIsotopeIncorporationModule.class
 
-  };
+    };
 }
