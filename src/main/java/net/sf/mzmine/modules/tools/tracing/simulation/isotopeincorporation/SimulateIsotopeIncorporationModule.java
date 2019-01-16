@@ -41,6 +41,9 @@ public class SimulateIsotopeIncorporationModule
     @Override
     public ExitCode runModule(MZmineProject project, ParameterSet parameters,
             Collection<Task> tasks) {
+        Task newTask = new SimulateIsotopeIncorporationTask(
+                (SimulateIsotopeIncorporationParameter) parameters);
+        tasks.add(newTask);
         return ExitCode.OK;
     }
 
