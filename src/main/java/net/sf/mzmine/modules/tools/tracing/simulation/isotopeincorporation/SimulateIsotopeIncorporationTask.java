@@ -95,7 +95,7 @@ public class SimulateIsotopeIncorporationTask implements Task {
         simulatorRequest.setAnalyzeMassShifts(determineIsotopeComposition);
         simulatorRequest.setTotalNumberOfFragments(10000.0);
         simulatorRequest.setRoundedMassPrecision(4);
-        simulatorRequest.setTargetIntensityType(IntensityType.MID);
+        simulatorRequest.setTargetIntensityType(IntensityType.RELATIVE);
         IsotopePatternSimulatorResponse response;
 
         try {
