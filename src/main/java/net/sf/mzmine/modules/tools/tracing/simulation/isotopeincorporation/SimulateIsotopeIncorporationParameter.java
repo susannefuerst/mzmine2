@@ -27,6 +27,7 @@ import net.sf.mzmine.parameters.parametertypes.DoubleParameter;
 import net.sf.mzmine.parameters.parametertypes.FormulaParameter;
 import net.sf.mzmine.parameters.parametertypes.IntegerParameter;
 import net.sf.mzmine.parameters.parametertypes.OptionalParameter;
+import net.sf.mzmine.parameters.parametertypes.StringParameter;
 
 public class SimulateIsotopeIncorporationParameter extends SimpleParameterSet {
 
@@ -37,28 +38,28 @@ public class SimulateIsotopeIncorporationParameter extends SimpleParameterSet {
     public static final IntegerParameter CHARGE = new IntegerParameter("Charge",
             "The absolute value of the charge. The simulation converts it to a negative value. So by now only negative charges are supported.",
             1);
-    public static final FormulaParameter FORMULA = new FormulaParameter();
-    public static final CapacityParameter CAPACITY = new CapacityParameter();
+    public static final StringParameter FORMULA = new FormulaParameter();
+    public static final StringParameter CAPACITY = new CapacityParameter();
     public static final DoubleParameter MIN_INTENSITY = new DoubleParameter(
             "Minimal intensity",
             "Simulated peaks below this intensity value will be filtered out.",
             new DecimalFormat("0.0000"), 0.1);
-    public static final IncorporationRateParameter TOTAL_INCORPORATION = new IncorporationRateParameter(
+    public static final DoubleParameter TOTAL_INCORPORATION = new IncorporationRateParameter(
             "Incorporation rate",
             "The total incorporation rate to simulate not an independent incorporation.");
-    public static final OptionalParameter<TracerParameter> TRACER_1 = new OptionalParameter<TracerParameter>(
+    public static final OptionalParameter<StringParameter> TRACER_1 = new OptionalParameter<StringParameter>(
             new TracerParameter("Tracer 1",
                     "The first tracer, e.g C. Required if you used two tracer and want to simulate independent incorporation."));
-    public static final OptionalParameter<IncorporationRateParameter> TRACER_1_INC = new OptionalParameter<IncorporationRateParameter>(
+    public static final OptionalParameter<DoubleParameter> TRACER_1_INC = new OptionalParameter<DoubleParameter>(
             new IncorporationRateParameter("Incorporation rate 1",
                     "Incorporation rate of the first tracer. Required if you used two tracer and want to simulate independent incorporation."));
-    public static final OptionalParameter<TracerParameter> TRACER_2 = new OptionalParameter<TracerParameter>(
+    public static final OptionalParameter<StringParameter> TRACER_2 = new OptionalParameter<StringParameter>(
             new TracerParameter("Tracer 2",
                     "The second tracer, e.g. N. Required if you used two tracer and want to simulate independent incorporation."));
-    public static final OptionalParameter<IncorporationRateParameter> TRACER_2_INC = new OptionalParameter<IncorporationRateParameter>(
+    public static final OptionalParameter<DoubleParameter> TRACER_2_INC = new OptionalParameter<DoubleParameter>(
             new IncorporationRateParameter("Incorporation rate 2",
                     "Incorporation of the second tracer. Required if you used two tracer and want to simulate independent incorporation."));
-    public static final OptionalParameter<IncorporationRateParameter> TRACER_BOTH_INC = new OptionalParameter<IncorporationRateParameter>(
+    public static final OptionalParameter<DoubleParameter> TRACER_BOTH_INC = new OptionalParameter<DoubleParameter>(
             new IncorporationRateParameter("Incorporation rate for both tracer",
                     "Indicates the amount of molecules that has both tracer at once incorporated. Required if you used two tracer and want to simulate independent incorporation."));
 
