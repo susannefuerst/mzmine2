@@ -27,7 +27,7 @@ import net.sf.mzmine.parameters.parametertypes.FormulaParameter;
 import net.sf.mzmine.parameters.parametertypes.IntegerParameter;
 import net.sf.mzmine.parameters.parametertypes.OptionalParameter;
 
-public class IsotopeIncorporationParameter extends SimpleParameterSet {
+public class SimulateIsotopeIncorporationParameter extends SimpleParameterSet {
 
     public static final BooleanParameter DETERMINE_ISOTOPE_COMPOSITION = new BooleanParameter(
             "Determine isotope composition",
