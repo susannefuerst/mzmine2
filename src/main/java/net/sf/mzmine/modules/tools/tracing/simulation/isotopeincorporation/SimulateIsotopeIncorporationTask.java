@@ -19,12 +19,15 @@
 package net.sf.mzmine.modules.tools.tracing.simulation.isotopeincorporation;
 
 import java.awt.Color;
+import java.io.IOException;
 
 import io.github.msdk.isotopes.tracing.data.Fragment;
 import io.github.msdk.isotopes.tracing.data.FragmentList;
 import io.github.msdk.isotopes.tracing.data.IncorporationRate;
+import io.github.msdk.isotopes.tracing.data.IsotopePattern;
 import io.github.msdk.isotopes.tracing.data.constants.Element;
 import io.github.msdk.isotopes.tracing.data.constants.IntensityType;
+import io.github.msdk.isotopes.tracing.data.exception.IntensityTypeMismatchException;
 import io.github.msdk.isotopes.tracing.simulation.IsotopePatternSimulator;
 import io.github.msdk.isotopes.tracing.simulation.IsotopePatternSimulatorRequest;
 import io.github.msdk.isotopes.tracing.simulation.IsotopePatternSimulatorResponse;
@@ -48,6 +51,27 @@ public class SimulateIsotopeIncorporationTask implements Task {
 
     @Override
     public void run() {
+        SpectraVisualizerWindow newWindow;
+        try {
+            IsotopePattern pattern = simulatePattern(parameter);
+            SimulatedSpectrumDataset dataset = createDataset(parameter,
+                    pattern);
+            newWindow = new SpectraVisualizerWindow(
+                    new RawDataFileImpl("simulatedDataFile"));
+            newWindow.getSpectrumPlot().addDataSet(dataset, Color.green, true);
+            newWindow.setVisible(true);
+            status = TaskStatus.FINISHED;
+        } catch (Exception e) {
+            status = TaskStatus.ERROR;
+            errorMessage = e.toString();
+            return;
+        }
+
+    }
+
+    public static IsotopePattern simulatePattern(
+            SimulateIsotopeIncorporationParameter parameter)
+            throws IntensityTypeMismatchException {
         String formula = parameter
                 .getParameter(SimulateIsotopeIncorporationParameter.FORMULA)
                 .getValue();
@@ -97,38 +121,39 @@ public class SimulateIsotopeIncorporationTask implements Task {
         simulatorRequest.setRoundedMassPrecision(4);
         simulatorRequest.setTargetIntensityType(IntensityType.RELATIVE);
         IsotopePatternSimulatorResponse response;
-
-        try {
-            if (simulateIndependentIncorporation) {
-                simulatorRequest.setTracer1(Element.valueOf(tracer1));
-                simulatorRequest
-                        .setTracer1Inc(new IncorporationRate(tracer1IncRate));
-                simulatorRequest.setTracer2(Element.valueOf(tracer2));
-                simulatorRequest
-                        .setTracer2Inc(new IncorporationRate(tracer2IncRate));
-                simulatorRequest
-                        .setTracerAllInc(new IncorporationRate(bothIncRate));
-                response = IsotopePatternSimulator
-                        .simulateIndependentTracerIncorporation(
-                                simulatorRequest);
-            } else {
-                response = IsotopePatternSimulator.simulate(simulatorRequest);
-            }
-            SpectraVisualizerWindow newWindow = new SpectraVisualizerWindow(
-                    new RawDataFileImpl("simulatedDataFile"));
-            SimulatedSpectrumDataset dataSet = new SimulatedSpectrumDataset(
-                    response.getIsotopePatternWithReducedFormulas(0),
-                    "Simulated pattern for " + formula + " with traced "
-                            + capacity);
-            newWindow.getSpectrumPlot().addDataSet(dataSet, Color.green, true);
-            newWindow.setVisible(true);
-            status = TaskStatus.FINISHED;
-        } catch (Exception e) {
-            status = TaskStatus.ERROR;
-            errorMessage = e.toString();
-            return;
+        if (simulateIndependentIncorporation) {
+            simulatorRequest.setTracer1(Element.valueOf(tracer1));
+            simulatorRequest
+                    .setTracer1Inc(new IncorporationRate(tracer1IncRate));
+            simulatorRequest.setTracer2(Element.valueOf(tracer2));
+            simulatorRequest
+                    .setTracer2Inc(new IncorporationRate(tracer2IncRate));
+            simulatorRequest
+                    .setTracerAllInc(new IncorporationRate(bothIncRate));
+            response = IsotopePatternSimulator
+                    .simulateIndependentTracerIncorporation(simulatorRequest);
+        } else {
+            response = IsotopePatternSimulator.simulate(simulatorRequest);
         }
+        return response.getIsotopePatternWithReducedFormulas(0);
+    }
 
+    public static SimulatedSpectrumDataset createDataset(
+            SimulateIsotopeIncorporationParameter parameter,
+            IsotopePattern pattern)
+            throws IntensityTypeMismatchException, IOException {
+        String formula = parameter
+                .getParameter(SimulateIsotopeIncorporationParameter.FORMULA)
+                .getValue();
+        String capacity = parameter
+                .getParameter(SimulateIsotopeIncorporationParameter.CAPACITY)
+                .getValue();
+        SpectraVisualizerWindow newWindow = new SpectraVisualizerWindow(
+                new RawDataFileImpl("simulatedDataFile"));
+        SimulatedSpectrumDataset dataSet = new SimulatedSpectrumDataset(pattern,
+                "Simulated pattern for " + formula + " with traced "
+                        + capacity);
+        return dataSet;
     }
 
     @Override
