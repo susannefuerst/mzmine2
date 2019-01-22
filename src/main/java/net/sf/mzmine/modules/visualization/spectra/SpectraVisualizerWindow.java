@@ -88,6 +88,8 @@ public class SpectraVisualizerWindow extends JFrame implements ActionListener {
     public static final Color singlePeakColor = Color.magenta;
     public static final Color detectedIsotopesColor = Color.magenta;
     public static final Color predictedIsotopesColor = Color.green;
+    public static final Color tracingColor = Color.black;
+    // public static final Color tracingColor = Color.decode("#009933");
 
     private SpectraToolBar toolBar;
     private SpectraPlot spectrumPlot;
@@ -567,7 +569,7 @@ public class SpectraVisualizerWindow extends JFrame implements ActionListener {
                         .createDataset(
                                 (SimulateIsotopeIncorporationParameter) parameters,
                                 scaledPattern);
-                spectrumPlot.addDataSet(dataset, Color.decode("#009933"), true);
+                spectrumPlot.addDataSet(dataset, tracingColor, true);
             } catch (Exception e) {
                 e.printStackTrace();
             }
