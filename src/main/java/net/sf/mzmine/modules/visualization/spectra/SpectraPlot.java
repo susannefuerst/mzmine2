@@ -50,7 +50,6 @@ import net.sf.mzmine.chartbasics.listener.ZoomHistory;
 import net.sf.mzmine.datamodel.MassSpectrumType;
 import net.sf.mzmine.datamodel.Scan;
 import net.sf.mzmine.main.MZmineCore;
-import net.sf.mzmine.modules.tools.tracing.data.SimulatedSpectrumDataset;
 import net.sf.mzmine.modules.visualization.spectra.datasets.IsotopesDataSet;
 import net.sf.mzmine.modules.visualization.spectra.datasets.PeakListDataSet;
 import net.sf.mzmine.modules.visualization.spectra.datasets.ScanDataSet;
@@ -426,14 +425,15 @@ public class SpectraPlot extends EChartPanel {
             newRenderer.setDefaultItemLabelGenerator(labelGenerator);
             newRenderer.setDefaultItemLabelsVisible(itemLabelsVisible);
             newRenderer.setDefaultItemLabelPaint(labelsColor);
-        } else if (dataSet instanceof SimulatedSpectrumDataset) {
-            newRenderer = new PeakRenderer(color, transparency);
-            // add label generator for the dataset
-            SpectraItemLabelGenerator labelGenerator = new SpectraItemLabelGenerator(
-                    this);
-            newRenderer.setDefaultItemLabelGenerator(labelGenerator);
-            newRenderer.setDefaultItemLabelsVisible(itemLabelsVisible);
-            newRenderer.setDefaultItemLabelPaint(labelsColor);
+            // } else if (dataSet instanceof SimulatedSpectrumDataset) {
+            // newRenderer = new PeakRenderer(color, transparency);
+            // // add label generator for the dataset
+            // SpectraItemLabelGenerator labelGenerator = new
+            // SpectraItemLabelGenerator(
+            // this);
+            // newRenderer.setDefaultItemLabelGenerator(labelGenerator);
+            // newRenderer.setDefaultItemLabelsVisible(itemLabelsVisible);
+            // newRenderer.setDefaultItemLabelPaint(labelsColor);
         } else {
             newRenderer = new PeakRenderer(color, transparency);
         }
