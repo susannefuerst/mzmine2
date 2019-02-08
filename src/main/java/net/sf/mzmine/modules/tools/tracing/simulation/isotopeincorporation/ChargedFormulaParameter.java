@@ -18,28 +18,36 @@
 
 package net.sf.mzmine.modules.tools.tracing.simulation.isotopeincorporation;
 
-import java.text.DecimalFormat;
 import java.util.Collection;
 
-import net.sf.mzmine.parameters.parametertypes.DoubleParameter;
+import net.sf.mzmine.parameters.parametertypes.StringParameter;
 
-public class IncorporationRateParameter extends DoubleParameter {
+public class ChargedFormulaParameter extends StringParameter {
 
-    public IncorporationRateParameter(String name, String description) {
-        super(name, description, new DecimalFormat("0.000"));
+    private static final String FORMULA_PATTERN = "^[\\[\\(]?(([A-Z][a-z]?[0-9]*)+)[\\]\\)]?(([0-9]*)([-+]))?$";
+
+    public ChargedFormulaParameter() {
+        super("Formula",
+                "The chemical formula including the charge, e.g. (C6H12O6)2+",
+                null);
     }
 
     @Override
     public boolean checkValue(Collection<String> errorMessages) {
         boolean superCheck = super.checkValue(errorMessages);
-        Double value = getValue();
+
+        String value = getValue();
         if (value == null) {
             return superCheck;
         }
-        if (value < 0 || value > 1) {
-            errorMessages.add("\"" + value + "\" has to be in [0,1]");
+        value = value.trim();
+
+        if ((value != null) && (!value.matches(FORMULA_PATTERN))) {
+            errorMessages.add("\"" + value
+                    + "\" is not a valid charged chemical formula");
             return false;
         }
+
         return superCheck;
     }
 

@@ -24,7 +24,7 @@ import net.sf.mzmine.parameters.parametertypes.StringParameter;
 
 public class CapacityParameter extends StringParameter {
 
-    private static final String formulaPattern = "^([A-Z][a-z]?[0-9]*)+$";
+    private static final String FORMULA_PATTERN = "^([A-Z][a-z]?[0-9]*)+$";
 
     public CapacityParameter() {
         super("Capacity formula",
@@ -42,7 +42,7 @@ public class CapacityParameter extends StringParameter {
         }
         value = value.trim();
 
-        if ((value != null) && (!value.matches(formulaPattern))) {
+        if ((value != null) && (!value.matches(FORMULA_PATTERN))) {
             errorMessages
                     .add("\"" + value + "\" is not a valid chemical formula");
             return false;

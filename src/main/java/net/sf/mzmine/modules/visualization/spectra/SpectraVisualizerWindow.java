@@ -27,7 +27,6 @@ import java.io.File;
 import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import javax.swing.JComboBox;
@@ -46,6 +45,8 @@ import org.jfree.data.xy.XYDataset;
 import com.google.common.base.Strings;
 import com.google.common.collect.Range;
 
+import io.github.msdk.isotopes.isotopepattern.impl.TracedIsotopePattern;
+import io.github.msdk.util.MsSpectrumUtil;
 import net.sf.mzmine.datamodel.DataPoint;
 import net.sf.mzmine.datamodel.Feature;
 import net.sf.mzmine.datamodel.IsotopePattern;
@@ -72,6 +73,7 @@ import net.sf.mzmine.modules.visualization.spectra.spectraidentification.sumform
 import net.sf.mzmine.parameters.ParameterSet;
 import net.sf.mzmine.parameters.parametertypes.WindowSettingsParameter;
 import net.sf.mzmine.util.ExitCode;
+import net.sf.mzmine.util.ScanUtils;
 import net.sf.mzmine.util.dialogs.AxesSetupDialog;
 
 /**
@@ -551,20 +553,31 @@ public class SpectraVisualizerWindow extends JFrame implements ActionListener {
                 return;
             }
             try {
-                io.github.msdk.isotopes.tracing.data.IsotopePattern pattern = SimulateIsotopeIncorporationTask
+                TracedIsotopePattern pattern = SimulateIsotopeIncorporationTask
                         .simulatePattern(
                                 (SimulateIsotopeIncorporationParameter) parameters);
                 ScanDataSet scanDataSet = spectrumPlot.getMainScanDataSet();
-                double mz = pattern.getMostAbundandMass();
-                Range<Double> searchMZRange = Range.closed(mz - 0.5, mz + 0.5);
+                SimulatedSpectrumDataset unscaledDataset = SimulateIsotopeIncorporationTask
+                        .createDataset(
+                                (SimulateIsotopeIncorporationParameter) parameters,
+                                pattern);
+                double highestMass = ScanUtils.findTopDataPoint(
+                        (DataPoint[]) unscaledDataset.getDataPoints().toArray())
+                        .getMZ();
+                Range<Double> searchMZRange = Range.closed(highestMass - 0.5,
+                        highestMass + 0.5);
                 double scaleFactor = scanDataSet
                         .getHighestIntensity(searchMZRange) / 100;
-                io.github.msdk.isotopes.tracing.data.IsotopePattern scaledPattern = new io.github.msdk.isotopes.tracing.data.IsotopePattern(
-                        pattern.getIntensityType(), pattern.getFormulas());
-                for (Entry<Double, Double> entry : pattern.entrySet()) {
-                    scaledPattern.put(entry.getKey(),
-                            entry.getValue() * scaleFactor);
-                }
+                float[] intensityValues = pattern.getIntensityValues();
+                MsSpectrumUtil.normalizeIntensity(intensityValues,
+                        intensityValues.length, (float) scaleFactor);
+                double[] mzValues = pattern.getMzValues();
+                String[] isotopeComposition = pattern.getIsotopeComposition();
+                String[] heavyIsotopes = pattern.getHeavyIsotopes();
+                TracedIsotopePattern scaledPattern = new TracedIsotopePattern(
+                        mzValues, intensityValues, mzValues.length,
+                        pattern.getSpectrumType(), isotopeComposition,
+                        heavyIsotopes);
                 SimulatedSpectrumDataset dataset = SimulateIsotopeIncorporationTask
                         .createDataset(
                                 (SimulateIsotopeIncorporationParameter) parameters,

@@ -19,13 +19,11 @@
 package net.sf.mzmine.modules.tools.tracing.data;
 
 import java.util.ArrayList;
-import java.util.Map.Entry;
 
 import org.jfree.data.xy.AbstractXYDataset;
 import org.jfree.data.xy.IntervalXYDataset;
 
-import io.github.msdk.isotopes.tracing.data.IsotopePattern;
-import io.github.msdk.isotopes.tracing.data.MassSpectrum;
+import io.github.msdk.isotopes.isotopepattern.impl.TracedIsotopePattern;
 
 /**
  * A dataset that includes labeled datapoints, where the label can be use for
@@ -39,6 +37,7 @@ public class SimulatedSpectrumDataset extends AbstractXYDataset
 
     private static final long serialVersionUID = 1L;
     private ArrayList<LabeledSimpleDataPoint> dataPoints;
+
     private String seriesKey;
 
     public SimulatedSpectrumDataset(
@@ -47,18 +46,15 @@ public class SimulatedSpectrumDataset extends AbstractXYDataset
         this.seriesKey = seriesKey;
     }
 
-    public SimulatedSpectrumDataset(MassSpectrum spectrum, String seriesKey) {
+    public SimulatedSpectrumDataset(TracedIsotopePattern pattern,
+            String seriesKey) {
         ArrayList<LabeledSimpleDataPoint> dataPoints = new ArrayList<>();
-        for (Entry<Double, Double> entry : spectrum.entrySet()) {
-            String label;
-            if (spectrum instanceof IsotopePattern) {
-                label = ((IsotopePattern) spectrum).getFormula(entry.getKey())
-                        .toSimpleString();
-            } else {
-                label = "";
-            }
+        double[] masses = pattern.getMzValues();
+        float[] intesities = pattern.getIntensityValues();
+        String[] heavyIsotopes = pattern.getHeavyIsotopes();
+        for (int i = 0; i < masses.length; i++) {
             LabeledSimpleDataPoint datapoint = new LabeledSimpleDataPoint(
-                    entry.getKey(), entry.getValue(), label);
+                    masses[i], intesities[i], heavyIsotopes[i]);
             dataPoints.add(datapoint);
         }
         this.dataPoints = dataPoints;
@@ -121,6 +117,10 @@ public class SimulatedSpectrumDataset extends AbstractXYDataset
 
     public double getStartYValue(int series, int item) {
         return getYValue(series, item);
+    }
+
+    public ArrayList<LabeledSimpleDataPoint> getDataPoints() {
+        return dataPoints;
     }
 
 }

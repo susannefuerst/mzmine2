@@ -20,10 +20,11 @@ package net.sf.mzmine.modules.tools.tracing.simulation.isotopeincorporation;
 
 import java.util.Collection;
 
-import io.github.msdk.isotopes.tracing.data.constants.Element;
 import net.sf.mzmine.parameters.parametertypes.StringParameter;
 
 public class TracerParameter extends StringParameter {
+
+    private static final String TRACER_PATTERN = "^([0-9]+)([A-Z][a-z]?)$";
 
     public TracerParameter(String name, String description) {
         super(name, description, null);
@@ -39,11 +40,10 @@ public class TracerParameter extends StringParameter {
         }
         value = value.trim();
 
-        try {
-            Element.valueOf(value);
-        } catch (Exception e) {
-            errorMessages.add("\"" + value
-                    + "\" is not a valid element or not yet supported.");
+        if ((value != null) && (!value.matches(TRACER_PATTERN))) {
+            errorMessages
+                    .add("\"" + value + "\" is not a valid isotope formula.");
+            return false;
         }
         return superCheck;
     }

@@ -21,16 +21,8 @@ package net.sf.mzmine.modules.tools.tracing.simulation.isotopeincorporation;
 import java.awt.Color;
 import java.io.IOException;
 
-import io.github.msdk.isotopes.tracing.data.Fragment;
-import io.github.msdk.isotopes.tracing.data.FragmentList;
-import io.github.msdk.isotopes.tracing.data.IncorporationRate;
-import io.github.msdk.isotopes.tracing.data.IsotopePattern;
-import io.github.msdk.isotopes.tracing.data.constants.Element;
-import io.github.msdk.isotopes.tracing.data.constants.IntensityType;
-import io.github.msdk.isotopes.tracing.data.exception.IntensityTypeMismatchException;
-import io.github.msdk.isotopes.tracing.simulation.IsotopePatternSimulator;
-import io.github.msdk.isotopes.tracing.simulation.IsotopePatternSimulatorRequest;
-import io.github.msdk.isotopes.tracing.simulation.IsotopePatternSimulatorResponse;
+import io.github.msdk.isotopes.isotopepattern.TracedIsotopePatternGeneratorAlgorithm;
+import io.github.msdk.isotopes.isotopepattern.impl.TracedIsotopePattern;
 import net.sf.mzmine.modules.tools.tracing.data.SimulatedSpectrumDataset;
 import net.sf.mzmine.modules.visualization.spectra.SpectraVisualizerWindow;
 import net.sf.mzmine.project.impl.RawDataFileImpl;
@@ -53,7 +45,7 @@ public class SimulateIsotopeIncorporationTask implements Task {
     public void run() {
         SpectraVisualizerWindow newWindow;
         try {
-            IsotopePattern pattern = simulatePattern(parameter);
+            TracedIsotopePattern pattern = simulatePattern(parameter);
             SimulatedSpectrumDataset dataset = createDataset(parameter,
                     pattern);
             newWindow = new SpectraVisualizerWindow(
@@ -69,84 +61,54 @@ public class SimulateIsotopeIncorporationTask implements Task {
 
     }
 
-    public static IsotopePattern simulatePattern(
+    public static TracedIsotopePattern simulatePattern(
             SimulateIsotopeIncorporationParameter parameter)
-            throws IntensityTypeMismatchException {
+            throws IOException {
         String formula = parameter
-                .getParameter(SimulateIsotopeIncorporationParameter.FORMULA)
+                .getParameter(
+                        SimulateIsotopeIncorporationParameter.CHEMICAL_FORMULA)
                 .getValue();
         String capacity = parameter
-                .getParameter(SimulateIsotopeIncorporationParameter.CAPACITY)
-                .getValue();
-        Double totalIncorporation = parameter.getParameter(
-                SimulateIsotopeIncorporationParameter.TOTAL_INCORPORATION)
-                .getValue();
-        Double minimalIntensity = parameter
                 .getParameter(
-                        SimulateIsotopeIncorporationParameter.MIN_INTENSITY)
+                        SimulateIsotopeIncorporationParameter.CAPACITY_FORMULA)
                 .getValue();
-        Boolean determineIsotopeComposition = parameter.getParameter(
-                SimulateIsotopeIncorporationParameter.DETERMINE_ISOTOPE_COMPOSITION)
-                .getValue();
-        Boolean simulateIndependentIncorporation = parameter
-                .getParameter(SimulateIsotopeIncorporationParameter.TRACER_1)
+        Double minAbundance = parameter
+                .getParameter(
+                        SimulateIsotopeIncorporationParameter.MIN_ABUNDANCE)
                 .getValue();
         String tracer1 = parameter
                 .getParameter(SimulateIsotopeIncorporationParameter.TRACER_1)
-                .getEmbeddedParameter().getValue();
+                .getValue();
         Double tracer1IncRate = parameter
                 .getParameter(
                         SimulateIsotopeIncorporationParameter.TRACER_1_INC)
-                .getEmbeddedParameter().getValue();
+                .getValue();
         String tracer2 = parameter
                 .getParameter(SimulateIsotopeIncorporationParameter.TRACER_2)
-                .getEmbeddedParameter().getValue();
+                .getValue();
         Double tracer2IncRate = parameter
                 .getParameter(
                         SimulateIsotopeIncorporationParameter.TRACER_2_INC)
-                .getEmbeddedParameter().getValue();
+                .getValue();
         Double bothIncRate = parameter
                 .getParameter(
                         SimulateIsotopeIncorporationParameter.TRACER_BOTH_INC)
-                .getEmbeddedParameter().getValue();
-
-        IsotopePatternSimulatorRequest simulatorRequest = new IsotopePatternSimulatorRequest();
-        Fragment fragment = new Fragment(formula, capacity);
-        simulatorRequest.setFragments(new FragmentList(fragment));
-        simulatorRequest.setIncorporationRate(
-                new IncorporationRate(totalIncorporation));
-        simulatorRequest.setMinimalFrequency(minimalIntensity);
-        simulatorRequest.setAnalyzeMassShifts(determineIsotopeComposition);
-        simulatorRequest.setTotalNumberOfFragments(10000.0);
-        simulatorRequest.setRoundedMassPrecision(4);
-        simulatorRequest.setTargetIntensityType(IntensityType.RELATIVE);
-        IsotopePatternSimulatorResponse response;
-        if (simulateIndependentIncorporation) {
-            simulatorRequest.setTracer1(Element.valueOf(tracer1));
-            simulatorRequest
-                    .setTracer1Inc(new IncorporationRate(tracer1IncRate));
-            simulatorRequest.setTracer2(Element.valueOf(tracer2));
-            simulatorRequest
-                    .setTracer2Inc(new IncorporationRate(tracer2IncRate));
-            simulatorRequest
-                    .setTracerAllInc(new IncorporationRate(bothIncRate));
-            response = IsotopePatternSimulator
-                    .simulateIndependentTracerIncorporation(simulatorRequest);
-        } else {
-            response = IsotopePatternSimulator.simulate(simulatorRequest);
-        }
-        return response.getIsotopePatternWithReducedFormulas(0);
+                .getValue();
+        return TracedIsotopePatternGeneratorAlgorithm.simulateTracedPattern(
+                formula, capacity, tracer1, tracer2, tracer1IncRate,
+                tracer2IncRate, bothIncRate, minAbundance, 100.0f, 0.00005);
     }
 
     public static SimulatedSpectrumDataset createDataset(
             SimulateIsotopeIncorporationParameter parameter,
-            IsotopePattern pattern)
-            throws IntensityTypeMismatchException, IOException {
+            TracedIsotopePattern pattern) throws IOException {
         String formula = parameter
-                .getParameter(SimulateIsotopeIncorporationParameter.FORMULA)
+                .getParameter(
+                        SimulateIsotopeIncorporationParameter.CHEMICAL_FORMULA)
                 .getValue();
         String capacity = parameter
-                .getParameter(SimulateIsotopeIncorporationParameter.CAPACITY)
+                .getParameter(
+                        SimulateIsotopeIncorporationParameter.CAPACITY_FORMULA)
                 .getValue();
         SpectraVisualizerWindow newWindow = new SpectraVisualizerWindow(
                 new RawDataFileImpl("simulatedDataFile"));

@@ -460,7 +460,7 @@
 		<dependency>
 			<groupId>io.github.msdk</groupId>
 			<artifactId>msdk-io-mzml</artifactId>
-			<version>${msdk.version}</version>
+			<version>0.0.20-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>io.github.msdk</groupId>
