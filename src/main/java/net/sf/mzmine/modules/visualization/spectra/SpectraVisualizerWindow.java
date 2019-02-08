@@ -88,8 +88,8 @@ public class SpectraVisualizerWindow extends JFrame implements ActionListener {
     public static final Color singlePeakColor = Color.magenta;
     public static final Color detectedIsotopesColor = Color.magenta;
     public static final Color predictedIsotopesColor = Color.green;
-    public static final Color tracingColor = Color.black;
-    // public static final Color tracingColor = Color.decode("#009933");
+    // public static final Color tracingColor = Color.black;
+    public static final Color tracingColor = Color.decode("#ffff00");
 
     private SpectraToolBar toolBar;
     private SpectraPlot spectrumPlot;
