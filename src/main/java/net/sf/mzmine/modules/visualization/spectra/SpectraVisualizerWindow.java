@@ -600,17 +600,18 @@ public class SpectraVisualizerWindow extends JFrame implements ActionListener {
                         .getParameter(
                                 CustomSpectraImportParamter.CONTAINS_HEADER)
                         .getValue();
-                ComparingSpectrumDataset dataset = ComparingSpectrumDataset
+                ComparingSpectrumDataset comparingDataset = ComparingSpectrumDataset
                         .fromCsv(csvFile, massColumnIndex, intensityColumnIndex,
                                 labelColumnIndex, containsHeader);
-                double mostAbundantMass = dataset.getHighestDataPoint().getMZ();
+                double mostAbundantMass = comparingDataset.getHighestDataPoint()
+                        .getMZ();
                 Range<Double> searchMZRange = Range
                         .closed(mostAbundantMass - 0.5, mostAbundantMass + 0.5);
                 ScanDataSet scanDataSet = spectrumPlot.getMainScanDataSet();
                 float scaleFactor = (float) scanDataSet
                         .getHighestIntensity(searchMZRange);
-                dataset.normalize(scaleFactor);
-                spectrumPlot.addDataSet(dataset, tracingColor, true);
+                comparingDataset.normalize(scaleFactor);
+                spectrumPlot.addDataSet(comparingDataset, tracingColor, true);
             } catch (Exception e) {
                 e.printStackTrace();
             }

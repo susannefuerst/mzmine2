@@ -29,8 +29,15 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
+import com.google.common.collect.Range;
+
+import net.sf.mzmine.datamodel.DataPoint;
+import net.sf.mzmine.datamodel.impl.SimpleDataPoint;
 import net.sf.mzmine.modules.tools.tracing.data.LabeledSimpleDataPoint;
 import net.sf.mzmine.modules.tools.tracing.data.SimulatedSpectrumDataset;
+import net.sf.mzmine.util.DataPointSorter;
+import net.sf.mzmine.util.SortingDirection;
+import net.sf.mzmine.util.SortingProperty;
 
 /**
  * @author Susanne Fürst, susanne.fuerst@mdc-berlin.de, susannefuerst@freenet.de
@@ -106,7 +113,8 @@ public class ComparingSpectrumDataset extends SimulatedSpectrumDataset {
             System.out.println(e.getStackTrace());
             e.printStackTrace();
         }
-
+        dataPoints.sort(new DataPointSorter(SortingProperty.MZ,
+                SortingDirection.Ascending));
         return new ComparingSpectrumDataset(dataPoints, seriesKey,
                 highestDataPoint);
     }
@@ -125,6 +133,33 @@ public class ComparingSpectrumDataset extends SimulatedSpectrumDataset {
             double mass = dataPoint.getMZ();
             float intensity = (float) (dataPoint.getIntensity()
                     / highestDataPoint.getIntensity() * scaleFactor);
+            String label = dataPoint.getLabel();
+            LabeledSimpleDataPoint scaledDataPoint = new LabeledSimpleDataPoint(
+                    mass, intensity, label);
+            scaledDataPoints.add(scaledDataPoint);
+        }
+        highestDataPoint = new LabeledSimpleDataPoint(highestDataPoint.getMZ(),
+                scaleFactor, highestDataPoint.getLabel());
+        this.dataPoints = scaledDataPoints;
+    }
+
+    public DataPoint getHighestDatapoint(Range<Double> mzRange) {
+        DataPoint highest = new SimpleDataPoint(0, 0);
+        for (DataPoint dataPoint : dataPoints) {
+            if (mzRange.contains(dataPoint.getMZ())
+                    && dataPoint.getIntensity() > highest.getIntensity()) {
+                highest = dataPoint;
+            }
+        }
+        return highest;
+    }
+
+    public void normalize(double normalizationFactor, float scaleFactor) {
+        ArrayList<LabeledSimpleDataPoint> scaledDataPoints = new ArrayList<LabeledSimpleDataPoint>();
+        for (LabeledSimpleDataPoint dataPoint : getDataPoints()) {
+            double mass = dataPoint.getMZ();
+            float intensity = (float) (dataPoint.getIntensity()
+                    / normalizationFactor * scaleFactor);
             String label = dataPoint.getLabel();
             LabeledSimpleDataPoint scaledDataPoint = new LabeledSimpleDataPoint(
                     mass, intensity, label);
