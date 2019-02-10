@@ -36,9 +36,13 @@ public class SimulatedSpectrumDataset extends AbstractXYDataset
         implements IntervalXYDataset {
 
     private static final long serialVersionUID = 1L;
-    private ArrayList<LabeledSimpleDataPoint> dataPoints;
+    protected ArrayList<LabeledSimpleDataPoint> dataPoints;
 
     private String seriesKey;
+
+    public SimulatedSpectrumDataset() {
+
+    }
 
     public SimulatedSpectrumDataset(
             ArrayList<LabeledSimpleDataPoint> dataPoints, String seriesKey) {

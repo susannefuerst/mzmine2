@@ -31,7 +31,7 @@ public class LabeledSimpleDataPoint extends SimpleDataPoint {
 
     private String label;
 
-    public LabeledSimpleDataPoint(double mz, double intensity, String label) {
+    public LabeledSimpleDataPoint(double mz, float intensity, String label) {
         super(mz, intensity);
         this.setLabel(label);
     }

@@ -57,6 +57,8 @@ import net.sf.mzmine.datamodel.Scan;
 import net.sf.mzmine.desktop.impl.WindowsMenu;
 import net.sf.mzmine.main.MZmineCore;
 import net.sf.mzmine.modules.peaklistmethods.isotopes.isotopeprediction.IsotopePatternCalculator;
+import net.sf.mzmine.modules.tools.customspectraimport.ComparingSpectrumDataset;
+import net.sf.mzmine.modules.tools.customspectraimport.CustomSpectraImportParamter;
 import net.sf.mzmine.modules.tools.tracing.data.SimulatedSpectrumDataset;
 import net.sf.mzmine.modules.tools.tracing.simulation.isotopeincorporation.SimulateIsotopeIncorporationModule;
 import net.sf.mzmine.modules.tools.tracing.simulation.isotopeincorporation.SimulateIsotopeIncorporationParameter;
@@ -566,6 +568,48 @@ public class SpectraVisualizerWindow extends JFrame implements ActionListener {
                         .createDataset(
                                 (SimulateIsotopeIncorporationParameter) parameters,
                                 scaledPattern);
+                spectrumPlot.addDataSet(dataset, tracingColor, true);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (command.equals("IMPORT_COMPARING_SPECTRUM")) {
+            ParameterSet parameters = new CustomSpectraImportParamter();
+            ExitCode exitCode = parameters.showSetupDialog(this, true);
+            if (exitCode != ExitCode.OK) {
+                return;
+            }
+            try {
+                File csvFile = parameters
+                        .getParameter(
+                                CustomSpectraImportParamter.CSV_SPECTRUM_FILE)
+                        .getValue();
+                Integer massColumnIndex = parameters
+                        .getParameter(
+                                CustomSpectraImportParamter.MASS_COLUMN_INDEX)
+                        .getValue();
+                Integer intensityColumnIndex = parameters.getParameter(
+                        CustomSpectraImportParamter.INTENSITY_COLUMN_INDEX)
+                        .getValue();
+                Integer labelColumnIndex = parameters
+                        .getParameter(
+                                CustomSpectraImportParamter.LABEL_COLUMN_INDEX)
+                        .getValue();
+                Boolean containsHeader = parameters
+                        .getParameter(
+                                CustomSpectraImportParamter.CONTAINS_HEADER)
+                        .getValue();
+                ComparingSpectrumDataset dataset = ComparingSpectrumDataset
+                        .fromCsv(csvFile, massColumnIndex, intensityColumnIndex,
+                                labelColumnIndex, containsHeader);
+                double mostAbundantMass = dataset.getHighestDataPoint().getMZ();
+                Range<Double> searchMZRange = Range
+                        .closed(mostAbundantMass - 0.5, mostAbundantMass + 0.5);
+                ScanDataSet scanDataSet = spectrumPlot.getMainScanDataSet();
+                float scaleFactor = (float) scanDataSet
+                        .getHighestIntensity(searchMZRange);
+                dataset.normalize(scaleFactor);
                 spectrumPlot.addDataSet(dataset, tracingColor, true);
             } catch (Exception e) {
                 e.printStackTrace();
