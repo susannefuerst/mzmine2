@@ -48,8 +48,7 @@ public class CustomSpectraImportParamter extends SimpleParameterSet {
             "Index of the column containing mass ids (optional, 0 based).",
             null, false);
     public static final BooleanParameter CONTAINS_HEADER = new BooleanParameter(
-            "Header info",
-            "Declares whether or not the csv file contains header information");
+            "Skip first line", "Ignores the first line of the csv file.");
 
     public CustomSpectraImportParamter() {
         super(new Parameter[] { CSV_SPECTRUM_FILE, MASS_COLUMN_INDEX,
