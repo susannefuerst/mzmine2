@@ -605,8 +605,8 @@ public class SpectraVisualizerWindow extends JFrame implements ActionListener {
                                 labelColumnIndex, containsHeader);
                 double mostAbundantMass = comparingDataset.getHighestDataPoint()
                         .getMZ();
-                Range<Double> searchMZRange = Range
-                        .closed(mostAbundantMass - 0.5, mostAbundantMass + 0.5);
+                Range<Double> searchMZRange = Range.closed(
+                        mostAbundantMass - 0.5, mostAbundantMass + 0.5);
                 ScanDataSet scanDataSet = spectrumPlot.getMainScanDataSet();
                 float scaleFactor = (float) scanDataSet
                         .getHighestIntensity(searchMZRange);
